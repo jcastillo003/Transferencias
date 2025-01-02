@@ -11,7 +11,7 @@
         const cui = document.getElementById('cui').value;
         const f_nac = document.getElementById('f_nac').value;
         const alerta = document.getElementById('alerta');
-        
+        /*
         if (cui.length !== 13)
         {
             alerta.style.display = 'block';
@@ -20,7 +20,7 @@
         } else {
             alerta.style.display = 'none';
         }
-
+        */
         if(cui === '' || f_nac === '')
         {
             alert('Ingrese todos los campos');
@@ -59,6 +59,20 @@
                 console.error('Error en comunicación: ' + error);
                 alert('Error en comunicación: ' + error);
             });
+    }
+    function validarCUI()
+    {
+        const cui = document.getElementById('cui').value;
+        const alerta = document.getElementById('alerta');
+
+        if (cui.length !== 13)
+        {
+            alerta.style.display = 'block';
+            alerta.textContent = 'Complete el CUI correctamente';
+            return;
+        } else {
+            alerta.style.display = 'none';
+        }
     }
 
     function actualizarTabla(data)
@@ -262,7 +276,7 @@
 <body>
     <div class="container">
         <label for="Cui_label" style="color:#0f3db3"><strong>CUI</strong></label>
-        <input type="Number" id="cui" name="cui" required placeholder="1111111110101">
+        <input type="Number" id="cui" name="cui" required placeholder="1111111110101" oninput="validarCUI() ">
         <!-- Alerta de longitud del CUI -->
          <div id = "alerta" class = "alerta"></div>
 
