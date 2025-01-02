@@ -4,13 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
-    
+    <title>Transacciones</title>
 <script>    
     function envioDatos()
     {
         const cui = document.getElementById('cui').value;
         const f_nac = document.getElementById('f_nac').value;
-
+        const alerta = document.getElementById('alerta');
+        
+        if (cui.length !== 13)
+        {
+            alerta.style.display = 'block';
+            alerta.textContent = 'Complete el CUI correctamente';
+            return;
+        } else {
+            alerta.style.display = 'none';
+        }
+        
         if(cui.length !== 13 || f_nac === '')
         {
             alert('Complete los correctamente');
@@ -158,6 +168,12 @@
         .container button:active{
             transform: scale(0.98);
             background-color: #3a4547;
+        }
+
+        .alerta {
+            color: red;
+            display: none;
+            margin-top: 5px;
         }
 
         iframe {
