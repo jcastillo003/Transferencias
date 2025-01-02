@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
+    <img src = "C:\Users\pgjmendez\Documents\Herramientas-Anexo\Background-header" alt="" style="width: 400px; height: 200px;">
+<script>    
+    function envioDatos()
+    {
+        const cui = document.getElementById('cui').value;
+        const f_nac = document.getElementById('f_nac').value;
+
+        if(cui === '' || f_nac === '')
+        {
+            alert('Ingrese todos los campos');
+            return;
+        }
+
+        const campo = {
+            cui: cui,
+            fecha_nac: f_nac
+        };
+
+        console.log('CUI: ', cui);
+        console.log('Fecha de Nacimiento: ', f_nac);
+        //fetch('http://172.30.23.38:8001/public/bw/ACHTransfer',
+        //fetch('http://localhost:8001/public/bw/ACHTransfer'),
+        fetch('https://ws.guadalupana.com.gt/public/bw/ACHTransfer',
+        //fetch('http://DEPINFOR08/public/bw/ACHTransfer'),
+            {
+                method: 'POST',//POST o GET
+                mode:"cors",
+                headers:
+                {
+                    'Content-Type':'application/json'
+                },
+            body: JSON.stringify(campo)
+            })
+            .then(response => response.json())
+            //.then(data => console.log(data))
+
+           .then(data => {
+                console.log('Datos recibidos: ', data);
+                actualizarTabla(data);
+            })
+            .catch(error =>
+            {
+                console.error('Error en comunicación: ' + error);
+                alert('Error en comunicación: ' + error);
+            });
+    }
+
+    function actualizarTabla(data)
+    {
+       const tbody = document.getElementById('dataGrid').getElementsByTagName('tbody')[0];
+
+        //Limpiar pantalla/tabla
+        tbody.innerHTML = '';
+        if(Array.isArray(data) && data.length > 0)
+    {
+        console.log('Datos que se insertarán en la tabla: ', data);
+        data.forEach(item =>
+            {
+                const row = tbody.insertRow();
+
+                const celdaCuenta = row.insertCell(0);
+                const celdaTipo = row.insertCell(1);
+                const celtaToken = row.insertCell(2);
+            
+                celdaCuenta.textContent = item.producto || data;
+                celdaTipo.textContent = item.tipo || data;
+                celtaToken.textContent = item.token|| data;
+            }
+        );
+    } else {
+        const row = tbody.insertRow();
+        const celda = row.insertCell(0);
+        celda.colSpan = 3;
+        celda.textContent = 'No se encontraron datos';
+        celta.style.textAlign = 'center';
+    }
+    }
+    function limpiarCampos(data)
+    {
+        document.getElementById('cui').value = '';
+        document.getElementById('f_nac').value = '';
+
+        const tbody = document.getElementById('dataGrid').getElementsByTagName('tbody')[0];
+        tbody.innerHTML = '';
+
+        setTimeout(() => {
+            const switchInput = document.querySelector('.switch input');
+            switchInput.checked = false;
+        }, 400);
+        
+    }
+</script>    
+    <title>Transacciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #ededed;
+            flex-direction: column;
+            padding-top: 100px;
+            background-color: #ededed;
+        }
+
+        .container {
+            background-color: #ededed;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+            margin-bottom: 30px;
+            margin-top: 400px;
+        }
+
+        .container h2 {
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+
+        .container input[type="Number"], .container input[type="date"], .container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            border: 1px solid #ededed;
+            border-radius: 10px;
+        }
+
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0f3db3;
+            color: #ededed;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .container button:hover {
+            background-color: #5f6f70;
+        }
+
+        .container button:active{
+            transform: scale(0.98);
+            background-color: #3a4547;
+        }
+
+        iframe {
+            margin-top: 20px;
+        }
+        table {
+            width: 80%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            text-align: left;
+            background-color: #fff;
+        }
+
+        th {
+            padding: 8px 12px;
+            background-color: #0f3db3;
+            color: white;
+        }
+
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+            margin-top: 10px;
+        }
+
+        .switch-container{
+            display: flex;
+            justify-content: right;
+            margin-top: 15px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            transition: all 0.4s ease;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cccccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider::before{
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider{
+            background-color: #4caf50;
+        }
+
+        input:focus + .slider{
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider::before{
+            transform: translateX(20px);
+        }
+
+        .limpiar-texto {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #cccccc;
+            cursor: pointer;
+            text-align: right;
+            user-select: none ;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="Cui_label" style="color:#0f3db3"><strong>CUI</strong></label>
+        <input type="Number" id="cui" name="cui" required placeholder="1111111110101">
+        <label for="Date_label" style="color:#0f3db3"><strong>Fecha de Nacimiento</strong></label>
+        <input type="date" id="f_nac" name="f_nac">
+        
+        <button type="button" onclick="envioDatos()">Consulta tu token</button>
+
+<!--     <label for "Limpiar" style = "color: #3a4547;" class = "switch">
+            <input type = "checkbox">
+            <span class = "slider round"></span>
+        </label>
+-->
+        <div class="switch-container">
+            <label class = "switch">
+                <input type = "checkbox" onclick="limpiarCampos()">
+                <span class = "slider"></span>
+            </label>
+            <div>
+                <label for = "limpiar" class = "limpiar-texto" ><strong>Limpiar</strong></label>
+            </div>
+        </div>
+        
+    </div>
+    <style>
+        body {
+            background-color: #0f3db3;
+        }
+    </style>
+    <h2></h2>
+    <table id="dataGrid" border="1">
+        <thead>
+            <tr>
+                <th>Cuenta</th>
+                <th>Tipo</th>
+                <th>Token Nexa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- -->
+        </tbody>
+    </table>
+</body>
+<body>
+    <div style="text-align: center;">
+        <iframe width="560" height="315" src="https://www.youtube.com/watch?v=CnMjURN8vfI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</body>
+</html>
