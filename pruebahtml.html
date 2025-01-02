@@ -20,7 +20,7 @@
         } else {
             alerta.style.display = 'none';
         }
-        
+
         if(cui.length !== 13 || f_nac === '')
         {
             alert('Complete los correctamente');
@@ -269,6 +269,9 @@
     <div class="container">
         <label for="Cui_label" style="color:#0f3db3"><strong>CUI</strong></label>
         <input type="Number" id="cui" name="cui" required placeholder="1111111110101">
+        <!-- Alerta de longitud del CUI -->
+         <div id = "alerta" class = "alerta"></div>
+         
         <label for="Date_label" style="color:#0f3db3"><strong>Fecha de Nacimiento</strong></label>
         <input type="date" id="f_nac" name="f_nac">
         
